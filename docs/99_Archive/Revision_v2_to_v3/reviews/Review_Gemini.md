@@ -1,6 +1,6 @@
 # Анализ пересечений и дублирований между разделами М0, М1 и М2 в Final_Progression_v3.md
 
-В текущей версии документа [Final_Progression_v3.md](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md) между разделами **М0**, **М1** и **М2** присутствуют серьёзные тематические пересечения, концептуальные дублирования и прямой конфликт версий.
+В текущей версии документа [Final_Progression_v3.md](../../Progression_v1_v2_v3/Final_Progression_v3.md) между разделами **М0**, **М1** и **М2** присутствуют серьёзные тематические пересечения, концептуальные дублирования и прямой конфликт версий.
 
 Основная причина коллизий — **асинхронное обновление модулей**:
 * **М0** был развёрнут в масштабную энциклопедическую базу из 15 подразделов (собственная история с древности до XXI века, подробная архитектура, схемотехника, практика ALU и старт встроенного отладчика).
@@ -14,23 +14,23 @@
 Это самое сильное противоречие в документе: машины, полноценно эмулируемые в М1, в М2 объявляются заново.
 
 1. **Manchester Baby (SSEM, 1948)**:
-   - В [М1.7](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1190) выделен отдельный подраздел из **7 практических уроков** с детальной разработкой эмулятора (история, архитектура, ISA, память Williams tube, цикл выполнения, эмуляция, тесты, сравнение с SAP).
-   - В [М2.1](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1851) машина заявлена заново: *«Трубка Уильямса как оперативная память, 7 инструкций, первая программа с хранением в памяти, простейший реальный fetch/execute»*.
+   - В [М1.7](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1190) выделен отдельный подраздел из **7 практических уроков** с детальной разработкой эмулятора (история, архитектура, ISA, память Williams tube, цикл выполнения, эмуляция, тесты, сравнение с SAP).
+   - В [М2.1](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1851) машина заявлена заново: *«Трубка Уильямса как оперативная память, 7 инструкций, первая программа с хранением в памяти, простейший реальный fetch/execute»*.
 
 2. **EDSAC (1949)**:
-   - В [М1.8](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1257) выделен отдельный подраздел из **7 уроков** с разработкой эмулятора (история, архитектура, ISA, delay-line memory, Initial Orders, подпрограммы, эмуляция).
-   - В [М2.3](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1860) машина объявляется снова: *«EDSAC (1949), EDVAC (1949) — первые двоичные хранимые программы, сравнение с Manchester Baby»*.
+   - В [М1.8](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1257) выделен отдельный подраздел из **7 уроков** с разработкой эмулятора (история, архитектура, ISA, delay-line memory, Initial Orders, подпрограммы, эмуляция).
+   - В [М2.3](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1860) машина объявляется снова: *«EDSAC (1949), EDVAC (1949) — первые двоичные хранимые программы, сравнение с Manchester Baby»*.
 
 3. **ENIAC, EDVAC, Manchester Mark 1**:
-   - В [М1.1 (урок 06)](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L817) они подробно разбираются концептуально в уроке *«06. Первые электронные реализации.md»*.
-   - В [М2.2, М2.3, Д2а](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1856-L1864) они повторно идут как основные и факультативные темы модуля М2.
+   - В [М1.1 (урок 06)](../../Progression_v1_v2_v3/Final_Progression_v3.md#L817) они подробно разбираются концептуально в уроке *«06. Первые электронные реализации.md»*.
+   - В [М2.2, М2.3, Д2а](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1856-L1864) они повторно идут как основные и факультативные темы модуля М2.
 
 4. **Смысловой разрыв на стыке М1 → М2**:
-   - В финальном уроке М1 ([М1.15, урок 08 «Переход к M2.md»](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1834)) заявлено: *«От учебных машин к реальным процессорам: усложнение ISA, реальные периферийные устройства, тайминг, interrupts, DMA...»*. То есть урок явно готовит читателя к **микропроцессорам** (уровня Intel 8080 / MOS 6502).
-   - Однако следующий за ним раздел [М2](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1847) возвращает читателя назад к ламповым машинам конца 1940-х годов, которые в М1 студент **уже написал**.
+   - В финальном уроке М1 ([М1.15, урок 08 «Переход к M2.md»](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1834)) заявлено: *«От учебных машин к реальным процессорам: усложнение ISA, реальные периферийные устройства, тайминг, interrupts, DMA...»*. То есть урок явно готовит читателя к **микропроцессорам** (уровня Intel 8080 / MOS 6502).
+   - Однако следующий за ним раздел [М2](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1847) возвращает читателя назад к ламповым машинам конца 1940-х годов, которые в М1 студент **уже написал**.
 
 5. **Анахронизм в `LAB: CPU Lab` (между М2 и М3)**:
-   - В [LAB: CPU Lab](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1870) предлагается практика: *«рефакторинг CHIP‑8 интерпретатора: switch → func-table, сравнение производительности через testing.B»*.
+   - В [LAB: CPU Lab](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1870) предлагается практика: *«рефакторинг CHIP‑8 интерпретатора: switch → func-table, сравнение производительности через testing.B»*.
    - К этому моменту читатель уже написал CHIP-8 (М1.2), генератор декодера на `go:generate` (М1.3) и ещё 8 эмуляторов (SAP-1..3, Baby, EDSAC, IAS, Hack, LC-3, RV32I). Возвращаться к рефакторингу первого CHIP-8 после М2 нелогично.
    - Кроме того, правило М1 прямо гласит: *«Никаких LAB как самостоятельного уровня. Практика интегрирована непосредственно в соответствующие уроки»*.
 
@@ -39,45 +39,45 @@
 ## 2. Пересечения: М0 vs М1 (Теоретическая база vs Вводная часть практики)
 
 1. **История Бэббиджа, Тьюринга и Поста**:
-   - **М0.1** ([уроки 09, 10, 11, 14](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L104)): подробно разобраны Бэббидж, Лавлейс, Аналитическая машина, перфокарты, машина Тьюринга, машина Поста, фон Нейман.
-   - **М1.1** ([уроки 01, 02, 03](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L751)): снова идут уроки «01. Механические вычислительные машины.md» (Бэббидж, перфокарты), «02. Абстрактная машина Тьюринга.md», «03. Пост и формальные системы.md».
+   - **М0.1** ([уроки 09, 10, 11, 14](../../Progression_v1_v2_v3/Final_Progression_v3.md#L104)): подробно разобраны Бэббидж, Лавлейс, Аналитическая машина, перфокарты, машина Тьюринга, машина Поста, фон Нейман.
+   - **М1.1** ([уроки 01, 02, 03](../../Progression_v1_v2_v3/Final_Progression_v3.md#L751)): снова идут уроки «01. Механические вычислительные машины.md» (Бэббидж, перфокарты), «02. Абстрактная машина Тьюринга.md», «03. Пост и формальные системы.md».
    - *Разница*: В М0 это исторический контекст, а в М1.1 — вводная цепочка к понятию виртуальной машины. Но фактологический материал полностью дублируется.
 
 2. **Модель фон Неймана и цикл Fetch / Decode / Execute**:
-   - **М0.5** ([уроки 01, 03](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L250)): модель фон Неймана, память, АЛУ, УУ, PC, SP, регистры, цикл команды (Fetch, Decode, Execute), адресация.
-   - **М1.1** ([уроки 04, 05](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L785)): идея хранимой программы, Fetch/Decode/Execute, абстрактная фон-неймановская машина (АЛУ, УУ, PC, IR, цикл выполнения инструкции).
-   - **М1.4** ([SAP-1, уроки 02, 05](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L947)): снова тот же фон-неймановский цикл и узлы: ALU, Accumulator, PC, IR, Controller.
+   - **М0.5** ([уроки 01, 03](../../Progression_v1_v2_v3/Final_Progression_v3.md#L250)): модель фон Неймана, память, АЛУ, УУ, PC, SP, регистры, цикл команды (Fetch, Decode, Execute), адресация.
+   - **М1.1** ([уроки 04, 05](../../Progression_v1_v2_v3/Final_Progression_v3.md#L785)): идея хранимой программы, Fetch/Decode/Execute, абстрактная фон-неймановская машина (АЛУ, УУ, PC, IR, цикл выполнения инструкции).
+   - **М1.4** ([SAP-1, уроки 02, 05](../../Progression_v1_v2_v3/Final_Progression_v3.md#L947)): снова тот же фон-неймановский цикл и узлы: ALU, Accumulator, PC, IR, Controller.
 
 3. **Классификация архитектур (Аккумуляторная / Регистровая / Стековая)**:
-   - В [М0.5.01](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L252) даются основы архитектуры и регистров.
-   - В [М1.1.05](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L804) разбираются: *«Аккумуляторная архитектура, Регистровая архитектура, Стековая архитектура»*.
-   - В [LAB: CPU Lab](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1873) тема звучит в третий раз: *«Аккумуляторная, регистровая, стековая архитектуры — сравнение»*.
+   - В [М0.5.01](../../Progression_v1_v2_v3/Final_Progression_v3.md#L252) даются основы архитектуры и регистров.
+   - В [М1.1.05](../../Progression_v1_v2_v3/Final_Progression_v3.md#L804) разбираются: *«Аккумуляторная архитектура, Регистровая архитектура, Стековая архитектура»*.
+   - В [LAB: CPU Lab](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1873) тема звучит в третий раз: *«Аккумуляторная, регистровая, стековая архитектуры — сравнение»*.
 
 4. **Память, Endianness, Memory Map, MMIO и Bus**:
-   - В [М0.5](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L264) (уроки 02, 04): организация шин, MMIO vs Port I/O, Little-endian vs Big-endian, выравнивание данных, виртуальная память.
-   - В [М1.10](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1393) («Память как часть архитектуры»): уроки 01–07 подробно разбирают адресацию, Endianness, Memory Map, mirroring, open bus, bank switching, MMIO и Bus.
+   - В [М0.5](../../Progression_v1_v2_v3/Final_Progression_v3.md#L264) (уроки 02, 04): организация шин, MMIO vs Port I/O, Little-endian vs Big-endian, выравнивание данных, виртуальная память.
+   - В [М1.10](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1393) («Память как часть архитектуры»): уроки 01–07 подробно разбирают адресацию, Endianness, Memory Map, mirroring, open bus, bank switching, MMIO и Bus.
    - *Разница*: В М0 это вводная теория, а в М1.10 — обобщение практического опыта эмуляции предыдущих машин (SAP, Baby, EDSAC, IAS). Темы концептуально идентичны.
 
 5. **ALU и флаги**:
-   - В [М0.4.03](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L240) и [М0.14](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L663) (практика): проектирование 8-битного ALU, операции сложения/вычитания/логики, флаги Z/N/C/V, табличные тесты.
-   - В [М1.4 (SAP-1)](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L947) и [М1.11 (Hack)](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1460): аналогичные блоки ALU и флаги снова эмулируются программно.
-   - В [LAB: CPU Lab](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1877): снова пункт *«Флаги АЛУ: Z, N, C, V/O — точная семантика в разных ISA»*.
+   - В [М0.4.03](../../Progression_v1_v2_v3/Final_Progression_v3.md#L240) и [М0.14](../../Progression_v1_v2_v3/Final_Progression_v3.md#L663) (практика): проектирование 8-битного ALU, операции сложения/вычитания/логики, флаги Z/N/C/V, табличные тесты.
+   - В [М1.4 (SAP-1)](../../Progression_v1_v2_v3/Final_Progression_v3.md#L947) и [М1.11 (Hack)](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1460): аналогичные блоки ALU и флаги снова эмулируются программно.
+   - В [LAB: CPU Lab](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1877): снова пункт *«Флаги АЛУ: Z, N, C, V/O — точная семантика в разных ISA»*.
 
 6. **Отладчик (Debugger)**:
-   - В [М0.15](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L703): проект-спутник стартует с дампа регистров, дампа памяти (hex+ASCII), истории инструкций и трейса.
-   - В [М1.2 (урок 08)](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L893): подраздел называется *«Первый отладчик»* и формулирует те же темы (*Register dump, Memory dump, Hex + ASCII, Step execution, Instruction trace, Breakpoints, Почему отладчик нужен уже на первом эмуляторе*), как будто в М0 отладчика ещё не было.
-   - В [М1.14 (урок 06)](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1739): тема повторяется как *«Debugger как сквозной инструмент»*.
+   - В [М0.15](../../Progression_v1_v2_v3/Final_Progression_v3.md#L703): проект-спутник стартует с дампа регистров, дампа памяти (hex+ASCII), истории инструкций и трейса.
+   - В [М1.2 (урок 08)](../../Progression_v1_v2_v3/Final_Progression_v3.md#L893): подраздел называется *«Первый отладчик»* и формулирует те же темы (*Register dump, Memory dump, Hex + ASCII, Step execution, Instruction trace, Breakpoints, Почему отладчик нужен уже на первом эмуляторе*), как будто в М0 отладчика ещё не было.
+   - В [М1.14 (урок 06)](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1739): тема повторяется как *«Debugger как сквозной инструмент»*.
 
 7. **Теория ассемблера**:
-   - В [М0.8](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L364): синтаксис assembly, двухпроходный ассемблер, таблицы символов, метки.
-   - В [М1.11.06](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1508) и [М1.12.07](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1596): те же концепции двухпроходного ассемблера разбираются для Hack и LC-3.
+   - В [М0.8](../../Progression_v1_v2_v3/Final_Progression_v3.md#L364): синтаксис assembly, двухпроходный ассемблер, таблицы символов, метки.
+   - В [М1.11.06](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1508) и [М1.12.07](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1596): те же концепции двухпроходного ассемблера разбираются для Hack и LC-3.
 
 ---
 
 ## 3. Пересечения: М0 vs М2 (История ранних машин)
 
-- В [М0.1.11](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L123) («XX век») и [М0.1.14](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L159) («Великие люди эпох»): упоминаются ENIAC, EDVAC, Zuse Z3, Уилкс (EDSAC), Уильямс и Килберн (Baby).
-- В [М2](file:///home/ut/work/emu-textbook/docs/Ideas/1.3_Final_Results/Final_Progression_v3.md#L1847) даётся краткая историческая справка по тем же самым машинам.
+- В [М0.1.11](../../Progression_v1_v2_v3/Final_Progression_v3.md#L123) («XX век») и [М0.1.14](../../Progression_v1_v2_v3/Final_Progression_v3.md#L159) («Великие люди эпох»): упоминаются ENIAC, EDVAC, Zuse Z3, Уилкс (EDSAC), Уильямс и Килберн (Baby).
+- В [М2](../../Progression_v1_v2_v3/Final_Progression_v3.md#L1847) даётся краткая историческая справка по тем же самым машинам.
 
 ---
 
