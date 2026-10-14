@@ -1,0 +1,117 @@
+/* ===== 3. THEME: LIGHT (modern engineering docs, clean neutral slate) ===== */
+[data-theme="light"] {
+  /* Background layers — neutral white & light technical gray */
+  --bg: #fcfcfc;
+  --bg-surface: #f4f5f6;
+  --bg-card: #ffffff;
+  --bg-card-hover: #eef1f5;
+  --bg-elevated: #e4e8ee;
+
+  /* Borders — crisp neutral technical gray */
+  --border: #b3bdcc;
+  --border-strong: #7d8ba0;
+  --border-accent: #4f5d72;
+
+  /* Text — confident dark neutral charcoal */
+  --text: #202122;
+  --text-secondary: #3d4145;
+  --text-muted: #54595d;
+  --text-subtle: #646a72;
+
+  /* Accent — pure technical engineering blue (no indigo/purple) */
+  --accent: #3366cc;
+  --accent-glow: rgba(30, 90, 150, 0.16);
+  --accent-hover: #2a4f9e;
+
+  /* Link — clean technical deep blue */
+  --link: #3050a0;
+  --link-glow: rgba(24, 82, 140, 0.14);
+
+  /* Semantic status */
+  --success: #0b7a46;
+  --success-glow: rgba(11, 122, 70, 0.15);
+  --warning: #b54708;
+  --warning-glow: rgba(181, 71, 8, 0.15);
+  --danger: #b42318;
+  --danger-glow: rgba(180, 35, 24, 0.15);
+
+  /* Code / special blocks — dark neutral technical IDE */
+  --code-bg: #f4f5f7;
+  --code-header-bg: #e9ebee;
+  --mermaid-bg: #fcfcfc;
+  --modal-bg: #ffffff;
+  --modal-backdrop: rgba(16, 24, 40, 0.75);
+
+  /* Overlays */
+  --overlay-subtle: rgba(16, 24, 40, 0.03);
+  --overlay-hover: rgba(16, 24, 40, 0.05);
+  --stripe-odd: rgba(16, 24, 40, 0.02);
+
+  /* Component-specific */
+  --active-submodule-bg: rgba(30, 90, 150, 0.08);
+  --active-submodule-border: rgba(30, 90, 150, 0.25);
+  --active-submodule-list-border: #1e5a96;
+  --success-border: rgba(11, 122, 70, 0.3);
+  --danger-border: rgba(180, 35, 24, 0.3);
+  --accent-border: rgba(30, 90, 150, 0.35);
+  --accent-subtle-bg: rgba(30, 90, 150, 0.08);
+  --link-subtle-bg: rgba(24, 82, 140, 0.08);
+  --module-tag-border: rgba(30, 90, 150, 0.3);
+  --mermaid-tag-border: rgba(24, 82, 140, 0.3);
+  --wikilink-border: rgba(24, 82, 140, 0.45);
+  --nav-active-gradient: linear-gradient(90deg, var(--accent), rgba(30, 90, 150, 0.25));
+  --hero-gradient: radial-gradient(circle at top, #eef0f3 0%, var(--bg) 65%);
+
+  /* Shadows (crisp & clean) */
+  --shadow-card: 0 1px 3px rgba(16, 24, 40, 0.06);
+  --shadow-dropdown: 0 4px 16px rgba(16, 24, 40, 0.12);
+
+  /* Prism syntax tokens (Crisp Modern IDE in Light) */
+  --code-text: #1f1f1f;
+  --code-comment: #007000;
+  --code-keyword: #0000ff;
+  --code-string: #a31515;
+  --code-number: #07774c;
+  --code-function: #795e26;
+  --code-class: #1c6a80;
+  --code-operator: #1f1f1f;
+  --code-punctuation: #3b3b3b;
+  --code-tag: #800000;
+  --code-inserted: #1e6b30;
+
+  /* Mermaid semantic palette (High contrast technical diagram) */
+  --mm-process-fill: #edf2f8; --mm-process-stroke: #1e5a96; --mm-process-text: #101828;
+  --mm-success-fill: #e6f6ee; --mm-success-stroke: #0b7a46; --mm-success-text: #053b22;
+  --mm-error-fill: #feeeee;   --mm-error-stroke: #b42318;   --mm-error-text: #4e0d08;
+  --mm-warning-fill: #fef4ea; --mm-warning-stroke: #b54708; --mm-warning-text: #4e1d03;
+  --mm-entry-fill: #e3eef9;   --mm-entry-stroke: #18528c;   --mm-entry-text: #0b2542;
+  --mm-aux-fill: #eaedf2;     --mm-aux-stroke: #667085;     --mm-aux-text: #101828;
+  --mm-system-fill: #e4eaf4;  --mm-system-stroke: #2e4768;  --mm-system-text: #121c29;
+  --mm-data-fill: #e0f2ec;    --mm-data-stroke: #0c7255;    --mm-data-text: #063124;
+  --mm-network-fill: #faeaee; --mm-network-stroke: #a22547; --mm-network-text: #420f1d;
+  --mm-accent-fill: #dbe9f7;  --mm-accent-stroke: #1e5a96;  --mm-accent-text: #0d2847;
+
+  /* Legacy aliases */
+  --bg-canvas: var(--bg);
+  --border-subtle: var(--border);
+  --border-active: var(--border-strong);
+  --border-highlight: var(--border-accent);
+  --text-primary: var(--text);
+  --text-dim: var(--text-subtle);
+  --accent-indigo: var(--accent);
+  --accent-indigo-glow: var(--accent-glow);
+  --accent-cyan: var(--link);
+  --accent-cyan-glow: var(--link-glow);
+  --accent-emerald: var(--success);
+  --accent-emerald-glow: var(--success-glow);
+  --accent-amber: var(--warning);
+  --accent-amber-glow: var(--warning-glow);
+  --accent-rose: var(--danger);
+  --accent-rose-glow: var(--danger-glow);
+}
+
+/* Theme-switcher icon visibility */
+[data-theme="light"] .floating-theme-switcher .theme-icon-light { display: block; }
+
+/* Theme-switcher tooltip */
+[data-theme="light"] .floating-theme-switcher::after { content: "Light"; }

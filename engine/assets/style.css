@@ -1,0 +1,2389 @@
+/* ==========================================================================
+   Go Backend Encyclopedia — Design System
+   Three-theme architecture: amber (default) | paper | light
+   Theme switching via [data-theme] attribute on <html>
+   All colours live in theme blocks; rule bodies use semantic tokens only.
+   ========================================================================== */
+
+/* ===== 0. Шрифты ядра: путь от assets/ (свёрнутый style.css лежит в dist/assets/) ===== */
+@font-face { font-family: "Engine Mono"; src: url("fonts/EngineMono-Variable.woff2") format("woff2"); font-weight: 200 700; font-style: normal; font-display: swap; }
+
+/* ===== 1. LAYOUT & TYPOGRAPHY TOKENS (not themed) ===== */
+:root {
+  /* Размеры и лейаут */
+  --sidebar-width: 30vw; /* ширина сайдбара: ровно 30% окна на десктопе; на телефоне (≤768px) — 80% */
+  --header-height: 56px;
+  --max-content-width: 1040px;
+  /* Текст статьи по умолчанию занимает всю максимальную ширину контента (сравнивается с ней); меньше — переопределить здесь */
+  --prose-max-width: var(--max-content-width);
+  /* Оглавление «На этой странице»: блок не шире этой доли ширины окна (единственное место, где задаётся число) */
+  --toc-max-width: 30vw;
+  /* Затемнение экрана за выдвижной панелью на телефоне (сайдбар): видно, что панель поверх статьи */
+  --panel-scrim: rgba(0, 0, 0, 0.45);
+
+  /* Шрифты */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Engine Mono — вшитый Cascadia Code (fonts/, OFL), латиница и кириллица, вариативный вес 200–700; запасные — системные */
+  --font-mono: "Engine Mono", "Cascadia Code", Consolas, "Courier New", monospace;
+  --code-inline-weight: 500;
+
+  /* Радиусы (строгие инженерные) */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+}
+
+
+/* ===== PRISM SYNTAX HIGHLIGHTING (theme-aware) ===== */
+/* Base code element — override vendor background/color */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: var(--code-text);
+  background: none;
+}
+
+/* Note: .code-block pre already has background: var(--code-bg) */
+/* But we need to also cover pre[class*=language-] background */
+pre[class*="language-"] {
+  background: var(--code-bg) !important;
+  color: var(--code-text) !important;
+}
+
+:not(pre) > code[class*="language-"] {
+  background: var(--code-inline-bg, var(--bg-card)) !important;
+  color: var(--code-inline, color-mix(in oklab, var(--link) 65%, var(--text))) !important;
+}
+
+/* Token colors */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata,
+.token.block-comment {
+  color: var(--code-comment);
+}
+
+.token.punctuation {
+  color: var(--code-punctuation);
+}
+
+.token.tag,
+.token.attr-name,
+.token.namespace,
+.token.deleted {
+  color: var(--code-tag);
+}
+
+.token.function-name {
+  color: var(--code-function);
+}
+
+.token.boolean,
+.token.number,
+.token.function {
+  color: var(--code-number);
+}
+
+.token.property,
+.token.class-name,
+.token.constant,
+.token.symbol {
+  color: var(--code-class);
+}
+
+.token.selector,
+.token.important,
+.token.atrule,
+.token.keyword,
+.token.builtin {
+  color: var(--code-keyword);
+}
+
+.token.string,
+.token.char,
+.token.attr-value,
+.token.regex,
+.token.variable {
+  color: var(--code-string);
+}
+
+.token.operator,
+.token.entity,
+.token.url {
+  color: var(--code-operator);
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.inserted {
+  color: var(--code-inserted);
+}
+
+/* ===== MERMAID DIAGRAM THEME OVERRIDES ===== */
+/* Override classDef semantic palette for all 3 themes */
+/* Mermaid injects <style> in SVG - we override with higher specificity */
+
+.mermaid svg .node.process > rect,
+.mermaid svg .node.process > polygon,
+.mermaid svg .node.process > circle,
+.mermaid svg .node.process > ellipse,
+.mermaid svg .node.process > path,
+.mermaid svg .node.process rect,
+.mermaid svg .node.process polygon,
+.mermaid svg .node.process circle,
+.mermaid svg .node.process path {
+  fill: var(--mm-process-fill) !important;
+  stroke: var(--mm-process-stroke) !important;
+  stroke-width: 1.5px !important;
+}
+.mermaid svg .node.process .label foreignObject div span,
+.mermaid svg .node.process .label text,
+.mermaid svg .node.process .label {
+  color: var(--mm-process-text) !important;
+  fill: var(--mm-process-text) !important;
+}
+
+.mermaid svg .node.success > rect,
+.mermaid svg .node.success > polygon,
+.mermaid svg .node.success > circle,
+.mermaid svg .node.success > ellipse,
+.mermaid svg .node.success > path,
+.mermaid svg .node.success rect,
+.mermaid svg .node.success polygon,
+.mermaid svg .node.success circle,
+.mermaid svg .node.success path {
+  fill: var(--mm-success-fill) !important;
+  stroke: var(--mm-success-stroke) !important;
+  stroke-width: 1.5px !important;
+}
+.mermaid svg .node.success .label foreignObject div span,
+.mermaid svg .node.success .label text,
+.mermaid svg .node.success .label {
+  color: var(--mm-success-text) !important;
+  fill: var(--mm-success-text) !important;
+}
+
+.mermaid svg .node.error > rect,
+.mermaid svg .node.error > polygon,
+.mermaid svg .node.error > circle,
+.mermaid svg .node.error > ellipse,
+.mermaid svg .node.error > path,
+.mermaid svg .node.error rect,
+.mermaid svg .node.error polygon,
+.mermaid svg .node.error circle,
+.mermaid svg .node.error path {
+  fill: var(--mm-error-fill) !important;
+  stroke: var(--mm-error-stroke) !important;
+  stroke-width: 1.5px !important;
+}
+.mermaid svg .node.error .label foreignObject div span,
+.mermaid svg .node.error .label text,
+.mermaid svg .node.error .label {
+  color: var(--mm-error-text) !important;
+  fill: var(--mm-error-text) !important;
+}
+
+.mermaid svg .node.warning > rect,
+.mermaid svg .node.warning > polygon,
+.mermaid svg .node.warning > circle,
+.mermaid svg .node.warning > ellipse,
+.mermaid svg .node.warning > path,
+.mermaid svg .node.warning rect,
+.mermaid svg .node.warning polygon,
+.mermaid svg .node.warning circle,
+.mermaid svg .node.warning path {
+  fill: var(--mm-warning-fill) !important;
+  stroke: var(--mm-warning-stroke) !important;
+  stroke-width: 1.5px !important;
+}
+.mermaid svg .node.warning .label foreignObject div span,
+.mermaid svg .node.warning .label text,
+.mermaid svg .node.warning .label {
+  color: var(--mm-warning-text) !important;
+  fill: var(--mm-warning-text) !important;
+}
+
+.mermaid svg .node.entry > rect,
+.mermaid svg .node.entry > polygon,
+.mermaid svg .node.entry > circle,
+.mermaid svg .node.entry > ellipse,
+.mermaid svg .node.entry > path,
+.mermaid svg .node.entry rect,
+.mermaid svg .node.entry polygon,
+.mermaid svg .node.entry circle,
+.mermaid svg .node.entry path {
+  fill: var(--mm-entry-fill) !important;
+  stroke: var(--mm-entry-stroke) !important;
+  stroke-width: 1.5px !important;
+}
+.mermaid svg .node.entry .label foreignObject div span,
+.mermaid svg .node.entry .label text,
+.mermaid svg .node.entry .label {
+  color: var(--mm-entry-text) !important;
+  fill: var(--mm-entry-text) !important;
+}
+
+.mermaid svg .node.aux > rect,
+.mermaid svg .node.aux > polygon,
+.mermaid svg .node.aux > circle,
+.mermaid svg .node.aux > ellipse,
+.mermaid svg .node.aux > path,
+.mermaid svg .node.aux rect,
+.mermaid svg .node.aux polygon,
+.mermaid svg .node.aux circle,
+.mermaid svg .node.aux path {
+  fill: var(--mm-aux-fill) !important;
+  stroke: var(--mm-aux-stroke) !important;
+  stroke-width: 1.5px !important;
+}
+.mermaid svg .node.aux .label foreignObject div span,
+.mermaid svg .node.aux .label text,
+.mermaid svg .node.aux .label {
+  color: var(--mm-aux-text) !important;
+  fill: var(--mm-aux-text) !important;
+}
+
+.mermaid svg .node.system > rect,
+.mermaid svg .node.system > polygon,
+.mermaid svg .node.system > circle,
+.mermaid svg .node.system > ellipse,
+.mermaid svg .node.system > path,
+.mermaid svg .node.system rect,
+.mermaid svg .node.system polygon,
+.mermaid svg .node.system circle,
+.mermaid svg .node.system path {
+  fill: var(--mm-system-fill) !important;
+  stroke: var(--mm-system-stroke) !important;
+  stroke-width: 1.5px !important;
+}
+.mermaid svg .node.system .label foreignObject div span,
+.mermaid svg .node.system .label text,
+.mermaid svg .node.system .label {
+  color: var(--mm-system-text) !important;
+  fill: var(--mm-system-text) !important;
+}
+
+.mermaid svg .node.data > rect,
+.mermaid svg .node.data > polygon,
+.mermaid svg .node.data > circle,
+.mermaid svg .node.data > ellipse,
+.mermaid svg .node.data > path,
+.mermaid svg .node.data rect,
+.mermaid svg .node.data polygon,
+.mermaid svg .node.data circle,
+.mermaid svg .node.data path {
+  fill: var(--mm-data-fill) !important;
+  stroke: var(--mm-data-stroke) !important;
+  stroke-width: 1.5px !important;
+}
+.mermaid svg .node.data .label foreignObject div span,
+.mermaid svg .node.data .label text,
+.mermaid svg .node.data .label {
+  color: var(--mm-data-text) !important;
+  fill: var(--mm-data-text) !important;
+}
+
+.mermaid svg .node.network > rect,
+.mermaid svg .node.network > polygon,
+.mermaid svg .node.network > circle,
+.mermaid svg .node.network > ellipse,
+.mermaid svg .node.network > path,
+.mermaid svg .node.network rect,
+.mermaid svg .node.network polygon,
+.mermaid svg .node.network circle,
+.mermaid svg .node.network path {
+  fill: var(--mm-network-fill) !important;
+  stroke: var(--mm-network-stroke) !important;
+  stroke-width: 1.5px !important;
+}
+.mermaid svg .node.network .label foreignObject div span,
+.mermaid svg .node.network .label text,
+.mermaid svg .node.network .label {
+  color: var(--mm-network-text) !important;
+  fill: var(--mm-network-text) !important;
+}
+
+.mermaid svg .node.accent > rect,
+.mermaid svg .node.accent > polygon,
+.mermaid svg .node.accent > circle,
+.mermaid svg .node.accent > ellipse,
+.mermaid svg .node.accent > path,
+.mermaid svg .node.accent rect,
+.mermaid svg .node.accent polygon,
+.mermaid svg .node.accent circle,
+.mermaid svg .node.accent path {
+  fill: var(--mm-accent-fill) !important;
+  stroke: var(--mm-accent-stroke) !important;
+  stroke-width: 1.5px !important;
+}
+.mermaid svg .node.accent .label foreignObject div span,
+.mermaid svg .node.accent .label text,
+.mermaid svg .node.accent .label {
+  color: var(--mm-accent-text) !important;
+  fill: var(--mm-accent-text) !important;
+}
+
+/* Default & unclassed node styling */
+.mermaid svg .node.default > rect,
+.mermaid svg .node.default > polygon,
+.mermaid svg .node.default > circle,
+.mermaid svg .node.default > ellipse,
+.mermaid svg .node.default > path,
+.mermaid svg .node.default rect,
+.mermaid svg .node.default polygon,
+.mermaid svg .node.default circle,
+.mermaid svg .node.default path {
+  fill: var(--bg-card) !important;
+  stroke: var(--border-strong) !important;
+  stroke-width: 1.5px !important;
+}
+
+.mermaid svg .node.default .label foreignObject div span,
+.mermaid svg .node.default .label text,
+.mermaid svg .node.default .label {
+  color: var(--text) !important;
+  fill: var(--text) !important;
+}
+
+/* Mermaid edge lines, paths, markers */
+.mermaid svg .edgePath path,
+.mermaid svg .flowchart-link {
+  stroke: var(--border-strong) !important;
+  stroke-width: 1.5px !important;
+}
+
+.mermaid svg .marker {
+  fill: var(--border-strong) !important;
+  stroke: var(--border-strong) !important;
+}
+
+.mermaid svg .edgeLabel {
+  color: var(--text-secondary) !important;
+  background-color: var(--bg-card) !important;
+}
+
+.mermaid svg .edgeLabel rect {
+  fill: var(--bg-card) !important;
+  opacity: 0.94 !important;
+}
+
+.mermaid svg text {
+  fill: var(--text-secondary) !important;
+}
+
+/* Cluster / Subgraph */
+.mermaid svg .cluster rect {
+  fill: var(--bg-surface) !important;
+  stroke: var(--border-strong) !important;
+  stroke-width: 1.5px !important;
+}
+
+.mermaid svg .cluster text {
+  fill: var(--text) !important;
+  font-weight: 600 !important;
+}
+
+/* ===== 5. RESET ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Вспомогательный класс для доступности (screen readers) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Единый доступный фокус клавиатуры */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ===== 6. COMPONENT STYLES (all colours via semantic tokens) ===== */
+
+/* Индикатор прогресса чтения */
+.reading-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--link));
+  z-index: 1000;
+  transition: width 0.1s ease-out;
+}
+
+/* Лейаут: сайдбар — оверлей вне потока, поэтому основная область всегда занимает всю ширину окна */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Левый сайдбар: скрыт по умолчанию; открывается, когда курсор у левого края окна (main.js, initSidebar).
+   Появление и исчезновение — те же длительности и кривые, что у оглавления.
+   Ширина — --sidebar-width (40% окна); ручного ресайза нет. */
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--bg-card);
+  border-right: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-dropdown);
+  display: flex;
+  flex-direction: column;
+  z-index: 1050;
+  user-select: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-12px);
+  transition: opacity 0.12s cubic-bezier(0.4, 0, 0.2, 1), transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.12s;
+}
+
+.app-sidebar.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.16s cubic-bezier(0.22, 1, 0.36, 1), transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar,
+  .app-sidebar.is-open {
+    transition: none;
+  }
+}
+
+.sidebar-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--link));
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.logo-go-icon {
+  height: 17px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.logo-sub {
+  font-size: 0.75rem;
+  color: var(--link);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Поиск по сайдбару */
+.sidebar-search {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-subtle);
+  pointer-events: none;
+}
+
+.search-input-wrapper input {
+  width: 100%;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 32px 8px 36px;
+  color: var(--text);
+  font-size: 0.85rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-input-wrapper input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--text-subtle);
+  font-size: 16px;
+  cursor: pointer;
+  display: none;
+}
+
+.clear-search-btn:hover {
+  color: var(--text);
+}
+
+/* Навигация сайдбара */
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 8px;
+}
+
+/* Полоса прокрутки дерева — свой бегунок .sidebar-thumb (main.js, initSidebarScrollbar).
+   Нативная полоса скрыта; бегунок видим, пока идёт прокрутка (класс .is-scrolling на панели), и гаснет. */
+.sidebar-content {
+  scrollbar-width: none;
+}
+
+.sidebar-content::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar-thumb {
+  position: absolute;
+  right: 3px;
+  width: 5px;
+  border-radius: 4px;
+  background-color: var(--border);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.app-sidebar.is-scrolling .sidebar-thumb {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-thumb {
+    transition: none;
+  }
+}
+
+.nav-module {
+  margin-bottom: 6px;
+  border-radius: var(--radius-sm);
+}
+
+.nav-module-title {
+  padding: 8px 10px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  list-style: none;
+}
+
+.nav-module-title::-webkit-details-marker {
+  display: none;
+}
+
+.nav-module-title:hover {
+  background-color: var(--bg-card-hover);
+  color: var(--text);
+}
+
+.nav-module.active-module > .nav-module-title {
+  color: var(--accent);
+}
+
+.mod-badge {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  padding: 1px 6px;
+  border-radius: 4px;
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.nav-module.active-module .mod-badge {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.mod-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.nav-module-content {
+  padding-left: 14px;
+  margin-top: 4px;
+  border-left: 1px solid var(--border);
+  margin-left: 14px;
+}
+
+.nav-articles-list {
+  list-style: none;
+}
+
+.nav-item {
+  margin-bottom: 2px;
+}
+
+.nav-item a {
+  display: block;
+  padding: 5px 8px;
+  font-size: 0.83rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  /* Длинное название переносится внутри панели, а не обрезается: переносы по пробелам, а если их нет — где угодно */
+  overflow-wrap: anywhere;
+  transition: all 0.15s ease;
+}
+
+.nav-item a:hover {
+  color: var(--text);
+  background-color: var(--bg-card-hover);
+}
+
+.nav-item.active a {
+  color: var(--accent);
+  background-color: var(--accent-subtle-bg);
+  box-shadow: inset 2px 0 0 var(--accent);
+  font-weight: 600;
+}
+
+.nav-submodule {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s ease;
+}
+
+.nav-submodule-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  list-style: none;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.nav-submodule-title::-webkit-details-marker {
+  display: none;
+}
+
+.nav-submodule-title:hover {
+  color: var(--text);
+  background-color: var(--bg-card-hover);
+}
+
+/* Иконка-шеврон подраздела */
+.sub-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 480ms cubic-bezier(0.22, 1, 0.36, 1), color 0.15s ease;
+  transform-origin: center center;
+}
+
+.sub-chevron svg {
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
+/* При раскрытии подраздела шеврон плавно поворачивается вниз */
+.nav-submodule[open]:not(.closing) > .nav-submodule-title > .sub-chevron {
+  transform: rotate(90deg);
+  color: var(--text-secondary);
+}
+
+.sub-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Название каталога — ссылка на его заглавную страницу (индексные файлы, U22) */
+.mod-text .index-link,
+.sub-text .index-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mod-text .index-link:hover,
+.sub-text .index-link:hover,
+.mod-text .index-link.active,
+.sub-text .index-link.active {
+  color: var(--accent);
+}
+
+/* Выделение подраздела при раскрытии */
+.nav-submodule[open]:not(.closing) > .nav-submodule-title {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Выделение активного подраздела (содержащего открытую лекцию) */
+.nav-submodule.active-submodule {
+  background-color: var(--active-submodule-bg);
+  border-radius: var(--radius-sm);
+}
+
+.nav-submodule.active-submodule > .nav-submodule-title {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.nav-submodule.active-submodule > .nav-submodule-title > .sub-chevron {
+  color: var(--accent);
+}
+
+.sub-list {
+  padding-left: 10px;
+  border-left: 1px dashed var(--border-strong);
+  margin-left: 14px;
+  margin-top: 2px;
+}
+
+.nav-submodule.active-submodule .sub-list {
+  border-left-color: var(--accent);
+}
+
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.catalog-stat strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.sidebar-version {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-subtle);
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+/* Основной контент */
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background-color: var(--bg);
+}
+
+.content-header {
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--border);
+  /* Кнопка сайдбара слева, значок оглавления справа */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background-color: var(--bg-surface);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+/* Значки шапки — кнопка сайдбара слева и значок оглавления справа — одного размера и яркости.
+   Иконка 20px у обеих; hover и открытое состояние — акцентным цветом. Оглавление: main.js, initTocAutohide */
+.btn-toggle-sidebar,
+.toc-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.btn-toggle-sidebar svg,
+.toc-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.btn-toggle-sidebar:hover,
+.btn-toggle-sidebar[aria-expanded="true"],
+.toc-toggle:hover,
+.toc-toggle[aria-expanded="true"] {
+  color: var(--accent);
+}
+
+.btn-toggle-sidebar:focus-visible,
+.toc-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Колонка статьи — точно по центру окна. Боковые поля (1fr) равны, поэтому центр не зависит от
+   ширины сайдбара (сайдбар — оверлей, в потоке его нет). Оглавление — всплывающее, в сетку не входит. */
+.content-wrapper {
+  margin: 0 auto;
+  padding: 36px 32px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, var(--max-content-width)) minmax(0, 1fr);
+  width: 100%;
+}
+
+.article-body {
+  grid-column: 2;
+  min-width: 0;
+  max-width: var(--max-content-width);
+  padding-left: 20px;
+  padding-right: 20px;
+  border-left: 1px dashed var(--border);
+  border-right: 1px dashed var(--border);
+}
+
+.article-header {
+  margin-bottom: 32px;
+  width: 100%;
+}
+
+.article-meta-tags {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.meta-tag {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.module-tag {
+  color: var(--accent);
+  border-color: var(--module-tag-border);
+}
+
+.mermaid-tag {
+  color: var(--link);
+  border-color: var(--mermaid-tag-border);
+}
+
+.article-title {
+  font-size: 2.1rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  max-width: var(--prose-max-width);
+}
+
+/* Типографика статьи: разделение обычной прозы и широких компонентов */
+.article-markdown {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Обычная колонка чтения: по умолчанию — вся ширина --max-content-width (--prose-max-width) */
+.article-markdown > p,
+.article-markdown > ul,
+.article-markdown > ol,
+.article-markdown > dl,
+.article-markdown > blockquote:not(.callout),
+.article-markdown > h2,
+.article-markdown > h3,
+.article-markdown > h4,
+.article-markdown > h5,
+.article-markdown > h6 {
+  max-width: var(--prose-max-width);
+}
+
+.article-markdown h2 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 38px;
+  margin-bottom: 14px;
+  scroll-margin-top: 80px;
+  letter-spacing: -0.01em;
+}
+
+.article-markdown h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 26px;
+  margin-bottom: 10px;
+  scroll-margin-top: 80px;
+}
+
+.article-markdown h4 {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+/* Типографика книги: разделители-линии в тексте не показываем (сам <hr> в исходнике остаётся) */
+.article-markdown hr {
+  display: none;
+}
+
+.article-markdown p {
+  margin-bottom: 18px;
+  font-size: 1rem;
+  line-height: 1.72;
+  color: var(--text-secondary);
+}
+
+.article-markdown ul, .article-markdown ol {
+  margin-bottom: 20px;
+  padding-left: 24px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.article-markdown li {
+  margin-bottom: 6px;
+}
+
+.article-markdown strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.article-markdown a.wikilink {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--wikilink-border);
+  transition: all 0.15s ease;
+}
+
+.article-markdown a.wikilink:hover {
+  color: var(--text);
+  border-bottom-style: solid;
+  background-color: var(--link-glow);
+}
+
+/* Обычные ссылки Markdown ([текст](https://…)) и список дочерних страниц заглавной страницы:
+   без этих правил браузер рисовал их стандартным синим, нечитаемым на тёмной теме */
+.article-markdown a:not(.wikilink) {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-color: var(--wikilink-border);
+  text-underline-offset: 3px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.article-markdown a:not(.wikilink):hover {
+  color: var(--text);
+  text-decoration-color: currentColor;
+}
+
+.article-markdown ul.index-children {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.article-markdown ul.index-children li {
+  margin: 0;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.article-markdown ul.index-children a {
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.article-markdown .wikilink-unresolved {
+  color: var(--text-subtle);
+  border-bottom: 1px dotted var(--text-subtle);
+  cursor: not-allowed;
+}
+
+/* Инлайн-код: строго не внутри блоков pre */
+.article-markdown :not(pre) > code {
+  background-color: var(--code-inline-bg, var(--bg-card));
+  /* Цвет выводится из темы: оттенок акцента (65%) чуть приближен к основному тексту (--text), ярче текста не бывает; книга может задать --code-inline* сама */
+  color: var(--code-inline, color-mix(in oklab, var(--link) 65%, var(--text)));
+  border: 1px solid var(--code-inline-border, color-mix(in srgb, var(--border) 55%, transparent));
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  font-weight: var(--code-inline-weight);
+  font-synthesis-weight: none;
+  font-variant-ligatures: none;
+  word-break: break-word;
+}
+
+/* Автономные блоки pre (не обернутые в .code-block) */
+.article-markdown pre {
+  margin: 28px 0;
+  width: 100%;
+  padding: 16px;
+  background-color: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--code-text);
+  overflow-x: auto;
+  box-shadow: none;
+}
+
+.article-markdown pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  display: block;
+  white-space: pre;
+}
+
+.article-markdown blockquote:not(.callout) {
+  border-left: 3px solid var(--border-strong);
+  padding-left: 16px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+/* Callouts (блоки-выноски) */
+.callout {
+  margin: 28px 0;
+  width: 100%;
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--border-strong);
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.callout-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  background-color: var(--overlay-hover);
+  border-bottom: 1px solid var(--border);
+}
+
+.callout-icon {
+  font-size: 1.05rem;
+}
+
+.callout-body {
+  padding: 14px 16px;
+  font-size: 0.94rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.callout-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Вариации Callouts */
+.callout-tip {
+  border-left-color: var(--success);
+}
+.callout-tip .callout-header {
+  color: var(--success);
+}
+
+.callout-interview {
+  border-left-color: var(--link);
+  background-color: var(--bg-surface);
+}
+.callout-interview .callout-header {
+  color: var(--link);
+}
+
+.callout-info {
+  border-left-color: var(--accent);
+}
+.callout-info .callout-header {
+  color: var(--accent);
+}
+
+.callout-warning {
+  border-left-color: var(--warning);
+}
+.callout-warning .callout-header {
+  color: var(--warning);
+}
+
+.callout-note {
+  border-left-color: var(--link);
+}
+.callout-note .callout-header {
+  color: var(--link);
+}
+
+.callout-caution, .callout-danger {
+  border-left-color: var(--danger);
+}
+.callout-caution .callout-header, .callout-danger .callout-header {
+  color: var(--danger);
+}
+
+/* Блоки кода Prism */
+.code-block {
+  margin: 28px 0;
+  width: 100%;
+  border-radius: var(--radius-md);
+  background-color: var(--code-bg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: none;
+  position: relative;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: var(--code-header-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.code-lang-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-code-copy {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  z-index: 10;
+}
+
+.btn-code-copy:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  background-color: var(--accent-subtle-bg);
+}
+
+.code-block pre {
+  margin: 0 !important;
+  padding: 16px !important;
+  background: transparent !important;
+  border: none !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.88rem !important;
+  line-height: 1.6 !important;
+  color: var(--code-text) !important;
+  overflow-x: auto;
+}
+
+.code-block pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  display: block;
+  white-space: pre;
+}
+
+/* Диаграммы Mermaid */
+.mermaid-wrapper {
+  margin: 32px 0;
+  width: 100%;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.mermaid-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 8px 16px;
+  background-color: var(--code-header-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.btn-mermaid-fullscreen {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-mermaid-fullscreen:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  background-color: var(--accent-subtle-bg);
+}
+
+/* Тело диаграммы сливается с обёрткой: один бордер, без внешних отступов.
+   Отступ внутри чёрного фона одинаковый со всех сторон.
+   Перебивает общие правила `.article-markdown pre` (margin, padding, border). */
+.mermaid-wrapper .mermaid {
+  margin: 0;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  background-color: var(--mermaid-bg);
+  border: none;
+  border-radius: 0;
+  overflow-x: auto;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Модальное окно для Mermaid */
+.mermaid-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+}
+
+.mermaid-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--modal-backdrop);
+  backdrop-filter: blur(8px);
+}
+
+.modal-dialog {
+  position: relative;
+  width: 92vw;
+  height: 90vh;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-dropdown);
+  z-index: 10;
+}
+
+.modal-header {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-modal-action {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.btn-modal-action:hover {
+  color: var(--text);
+  border-color: var(--link);
+}
+
+.btn-modal-close {
+  background-color: var(--danger-glow);
+  color: var(--danger);
+  border-color: var(--danger-border);
+  font-size: 1.2rem;
+}
+
+/* Центрирование через margin: auto, а не align-items: center: у flex-центрирования
+   переполнение уходит за верхний край прокрутки и обрезается без возможности доскроллить. */
+.modal-body {
+  flex: 1;
+  overflow: auto;
+  padding: 30px;
+  display: flex;
+  background-color: var(--modal-bg);
+  cursor: grab;
+}
+
+.modal-body:active {
+  cursor: grabbing;
+}
+
+/* Размер SVG задаёт main.js (px); flex: none не даёт ему ужаться в контейнере при зуме. */
+.modal-body svg {
+  flex: none;
+  margin: auto;
+  max-width: none !important;
+}
+
+/* Таблицы */
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 28px 0;
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background-color: var(--bg-card);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  text-align: left;
+  table-layout: auto;
+}
+
+th {
+  background-color: var(--bg-surface);
+  color: var(--text);
+  font-weight: 600;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--border-strong);
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  white-space: normal;
+  word-break: normal;
+}
+
+td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  line-height: 1.55;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+td code {
+  white-space: nowrap;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:nth-child(even) {
+  background-color: var(--stripe-odd);
+}
+
+tr:hover {
+  background-color: var(--overlay-hover);
+}
+
+/* Оглавление «На этой странице»: скрыто, значок в шапке справа открывает его по наведению.
+   Блок не шире --toc-max-width (доля ширины окна). Открытие и закрытие — ниже. */
+.article-toc {
+  position: fixed;
+  top: 80px;
+  right: 32px;
+  z-index: 60;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: var(--toc-max-width);
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  /* Прокрутка блока не передаётся статье под ним: иначе на телефоне крутится весь экран */
+  overscroll-behavior: contain;
+  padding: 14px 18px;
+  font-size: 0.82rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-dropdown);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(12px);
+  transition: opacity 0.12s cubic-bezier(0.4, 0, 0.2, 1), transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.12s;
+}
+
+.toc-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+  margin-bottom: 12px;
+}
+
+.toc-list {
+  list-style: none;
+}
+
+.toc-item {
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* Длинный текст переносится внутри блока, даже если в нём нет пробелов */
+.toc-item a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  display: block;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  transition: color 0.15s ease;
+}
+
+.toc-item a:hover {
+  color: var(--accent);
+}
+
+.toc-h3 {
+  padding-left: 12px;
+}
+
+/* Значок оглавления в шапке: открывает блок по наведению (main.js, initTocAutohide).
+   Размер, цвет и фокус — общие с кнопкой сайдбара (см. выше); здесь только отступ справа */
+.toc-toggle {
+  margin: 0 4px 0 0;
+}
+
+.article-toc.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.16s cubic-bezier(0.22, 1, 0.36, 1), transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-toggle-sidebar,
+  .toc-toggle,
+  .article-toc,
+  .article-toc.is-open {
+    transition: none;
+  }
+}
+
+/* Блок навигации Предыдущая / Следующая */
+.article-bottom-nav {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.article-nav-card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.article-nav-card:hover {
+  border-color: var(--accent);
+  background-color: var(--bg-card-hover);
+}
+
+.nav-dir {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  margin-bottom: 6px;
+}
+
+.next-card {
+  text-align: right;
+}
+
+.nav-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Футер */
+.app-footer, .index-footer {
+  padding: 24px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-subtle);
+  margin-top: auto;
+}
+
+/* ==========================================================================
+   Плавающие элементы управления (Theme Switcher & Scroll-to-Top)
+   ========================================================================== */
+
+/* Единый плавающий переключатель темы */
+.floating-theme-switcher {
+  position: fixed;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  right: calc(24px + env(safe-area-inset-right, 0px));
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  z-index: 990;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.floating-theme-switcher:hover {
+  background-color: var(--bg-card-hover);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-dropdown);
+}
+
+.floating-theme-switcher:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-card);
+}
+
+.floating-theme-switcher:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Слот для иконки темы */
+.theme-icon-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+.floating-theme-switcher .theme-icon {
+  display: none;
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  pointer-events: none;
+}
+
+
+/* CSS Tooltip с названием текущей темы */
+.floating-theme-switcher::after {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+  background-color: var(--bg-surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  box-shadow: var(--shadow-dropdown);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+  z-index: 1000;
+}
+
+
+.floating-theme-switcher:hover::after,
+.floating-theme-switcher:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(-2px);
+}
+
+/* Список тем над переключателем: открывается по нажатию на значок, как оглавление.
+   Клик мимо или Escape закрывает без смены темы; клик по теме — применяет, список остаётся открытым (main.js, initThemeSwitcher) */
+.theme-menu {
+  position: fixed;
+  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  right: calc(24px + env(safe-area-inset-right, 0px));
+  z-index: 995;
+  box-sizing: border-box;
+  min-width: 200px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding: 6px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-dropdown);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.12s cubic-bezier(0.4, 0, 0.2, 1), transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.12s;
+}
+
+.theme-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.16s cubic-bezier(0.22, 1, 0.36, 1), transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
+}
+
+.theme-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.88rem;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.theme-menu-item:hover {
+  background-color: var(--bg-card-hover);
+  color: var(--text);
+}
+
+.theme-menu-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.theme-menu-item.is-current {
+  background-color: var(--accent-subtle-bg);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.theme-menu-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  pointer-events: none;
+}
+
+/* Пока список открыт, подсказка с названием темы у значка не нужна */
+.floating-theme-switcher[aria-expanded="true"]::after {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-menu,
+  .theme-menu.is-open {
+    transition: none;
+  }
+}
+
+/* Кнопка наверх (стекируется над переключателем темы) */
+.btn-scroll-top {
+  position: fixed;
+  bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+  right: calc(25px + env(safe-area-inset-right, 0px));
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 980;
+}
+
+.btn-scroll-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.btn-scroll-top:hover {
+  background-color: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ==========================================================================
+   Главная страница (Index Dashboard)
+   ========================================================================== */
+.index-page {
+  background: var(--hero-gradient);
+}
+
+.index-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 24px 40px;
+}
+
+.index-hero {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.hero-top-meta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: var(--accent-subtle-bg);
+  border: 1px solid var(--accent-border);
+  color: var(--accent);
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.hero-version {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.25;
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+}
+
+.hero-quote {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  max-width: 700px;
+  margin: 0 auto 36px;
+}
+
+.quote-author {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-style: normal;
+}
+
+/* Поисковый бокс на главной */
+.hero-search-box {
+  max-width: 680px;
+  margin: 0 auto 40px;
+  position: relative;
+}
+
+.search-bar-inner {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 10px 18px;
+  box-shadow: var(--shadow-dropdown);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-bar-inner:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.hero-search-icon {
+  color: var(--link);
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.hero-search-box input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 1.05rem;
+  outline: none;
+}
+
+.search-results-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-dropdown);
+  max-height: 380px;
+  overflow-y: auto;
+  z-index: 100;
+  text-align: left;
+}
+
+.search-results-dropdown.active {
+  display: block;
+}
+
+.search-result-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: block;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.search-result-item:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.search-res-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.search-res-module {
+  font-size: 0.78rem;
+  color: var(--link);
+}
+
+/* Статистическая лента */
+.stats-ribbon {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.stat-box {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.stat-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Сетка карточек модулей */
+.modules-catalog {
+  margin-bottom: 60px;
+}
+
+.catalog-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.section-sub {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  list-style: none;
+}
+
+.module-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.module-card:hover {
+  border-color: var(--accent);
+  background-color: var(--bg-card-hover);
+}
+
+.module-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card-num-badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  background-color: var(--accent-subtle-bg);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.card-count-badge {
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+}
+
+.module-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.module-card-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.btn-card-start {
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  padding: 7px 12px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.btn-card-start:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: var(--accent-subtle-bg);
+}
+
+/* Дорожная карта */
+.learning-roadmap {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  margin-bottom: 60px;
+}
+
+.roadmap-timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+  list-style: none;
+}
+
+.roadmap-step {
+  border-top: 3px solid var(--accent);
+  padding-top: 16px;
+}
+
+.step-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.roadmap-step h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.roadmap-step p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  /* Телефон: сайдбар — выдвижная панель на 80% ширины окна. Открывает и закрывает её кнопка в шапке
+     (касание панель не открывает: main.js, initSidebar). Выдвижение — 0.3 с, как было в мобильном меню */
+  :root {
+    --sidebar-width: 80vw;
+  }
+
+  .app-sidebar,
+  .app-sidebar.is-open {
+    opacity: 1;
+  }
+
+  .app-sidebar {
+    transform: translateX(-100%);
+    box-shadow: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s linear 0.3s;
+  }
+
+  .app-sidebar.is-open {
+    transform: none;
+    box-shadow: var(--shadow-dropdown), 0 0 0 100vmax var(--panel-scrim);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app-sidebar,
+    .app-sidebar.is-open {
+      transition: none;
+    }
+  }
+
+  .content-header {
+    padding: 12px 16px;
+  }
+
+  /* Телефон: блок оглавления — 80% ширины окна, справа под шапкой; касание открывает и закрывает его
+     (main.js, initTocAutohide). Высота — по малому окну (svh): с видимыми панелями браузера блок не уходит
+     под нижнюю панель, и полоса прокрутки видна */
+  .article-toc {
+    display: block;
+    top: 68px;
+    right: 12px;
+    width: 80vw;
+    max-width: 80vw;
+    max-height: calc(100vh - 84px);
+    max-height: calc(100svh - 84px);
+    transition: opacity 0.12s cubic-bezier(0.4, 0, 0.2, 1), transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.12s, box-shadow 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Затемнение экрана под открытым оглавлением: тень-отступ на весь экран. Тап по нему закрывает блок (main.js, initTocAutohide).
+     Пикер тем затемнения не получает: он маленький и открыт поверх статьи */
+  .article-toc.is-open {
+    box-shadow: var(--shadow-dropdown), 0 0 0 100vmax var(--panel-scrim);
+    transition: opacity 0.16s cubic-bezier(0.22, 1, 0.36, 1), transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s, box-shadow 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .article-toc,
+    .article-toc.is-open {
+      transition: none;
+    }
+  }
+
+  /* Пункт оглавления — строка для пальца: шрифт на 20% больше десктопного (0.82rem),
+     высота строки — 36px (с отступами по 6px сверху и снизу при одной строке текста) */
+  .toc-item a {
+    display: flex;
+    align-items: center;
+    min-height: 36px;
+    font-size: 0.984rem;
+  }
+
+  .content-wrapper {
+    padding: 20px 16px;
+  }
+
+  .index-container {
+    padding: 36px 16px 24px;
+  }
+
+  .stats-ribbon {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .article-bottom-nav {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-header {
+    padding: 10px 12px;
+  }
+
+  .content-wrapper {
+    padding: 16px 12px;
+  }
+
+  .article-title {
+    font-size: 1.65rem;
+  }
+
+  .stats-ribbon {
+    grid-template-columns: 1fr;
+  }
+
+  .theme-menu {
+    bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+    right: calc(16px + env(safe-area-inset-right, 0px));
+  }
+
+  .floating-theme-switcher {
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: calc(16px + env(safe-area-inset-right, 0px));
+    width: 44px;
+    height: 44px;
+  }
+
+  .btn-scroll-top {
+    bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+    right: calc(18px + env(safe-area-inset-right, 0px));
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* KaTeX математические формулы */
+.katex {
+  font-size: 1.05em;
+  color: var(--text);
+}
+
+.katex-display {
+  margin: 1.2em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 8px 0;
+}
