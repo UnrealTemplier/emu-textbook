@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Временные файлы редакторов и систем
+*.swp
+*.swo
+*~
+.DS_Store
+.idea/
+.vscode/
+*.tmp
+*.bak
+
+# Сайт собирает CI (python -m engine.build); локальная сборка — в dist/, в Git не хранится
+dist/
+
+# Временные каталоги python -m engine.sync
+/.engine-sync-new/
+/.engine-sync-old/

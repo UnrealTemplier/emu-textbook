@@ -1,0 +1,102 @@
+# book.toml — конфигурация учебника по эмуляции для движка html-textbook-engine.
+# Все ключи и значения по умолчанию — engine/config.py, описание — README.md движка.
+# Сборка и аудит из корня репозитория:
+#   python3 -m engine.build --all --strict
+#   python3 -m engine.audit --strict
+
+[project]
+version = "0.1.0"
+# Префикс ключей localStorage: книги на одном origin GitHub Pages делят хранилище
+storage_prefix = "emu_textbook_"
+
+[content]
+root = "sources"
+# Имя файла — короткое и безопасное для всех ОС; полное название урока — первый «# …».
+# В названиях уроков прогрессии есть «:» и «/» («CP/M как HLE-демонстрация»), в именах файлов их быть не может.
+title_source = "h1"
+# «00. О модуле.md» и «00. О подразделе.md» — заглавные страницы модулей, подразделов и разделов-папок
+index_file = '^0+\. '
+
+[markdown]
+obsidian_lists = true
+indented_fences = true
+
+[math]
+# Одиночный $ — не формула: в ассемблере 6502, 6800, 68000 и др. так пишутся шестнадцатеричные
+# числа ($FFFC, LDA #$01). Строчные формулы — \(…\), выносные — $$…$$ или \[…\].
+delimiters = [
+  { left = "$$", right = "$$", display = true },
+  { left = '\(', right = '\)', display = false },
+  { left = '\[', right = '\]', display = true },
+]
+protect = ['\(', '\[', "$$"]
+
+[navigation]
+mode = "hybrid"
+static_module_list = true
+
+[features]
+conditional_scripts = true
+
+[branding]
+logo_icon_svg_file = "book/assets/logo-icon.svg"
+logo_title_text = "EMU"
+logo_sub = "Учебник по эмуляции"
+logo_aria_label = "На главную: учебник по эмуляции"
+favicon_svg = "book/assets/favicon.svg"
+
+[article_page]
+title_suffix_html = " | Учебник по эмуляции"
+meta_description_html = "{title} — урок учебника по эмуляции: как с нуля писать эмуляторы процессоров, компьютеров и консолей на Go."
+footer_html = [
+  "Учебник по эмуляции • Эмуляторы процессоров, компьютеров и игровых консолей на Go",
+  "Собрано движком html-textbook-engine без внешних зависимостей. Работает офлайн и по file:///.",
+]
+
+# Подстановки: {modules}, {articles}, {articles_grouped}, {mermaid}
+[index_page]
+title_html = "Учебник по эмуляции — как писать эмуляторы на Go"
+meta_description_html = "Русскоязычный учебник о том, как с нуля писать эмуляторы процессоров, компьютеров и игровых консолей на Go: {modules} модулей, {articles_grouped} уроков."
+hero_badge_html = "Учебник по эмуляции"
+hero_title_html = "Эмуляторы с нуля: от машины фон Неймана и CHIP-8 до PlayStation 3"
+quote_html = "Теория, проектирование и практика на Go: история вычислительной техники, учебные виртуальные машины, первые микропроцессоры, домашние компьютеры, игровые консоли и современные платформы."
+quote_author_html = ""
+search_placeholder = "Поиск по {articles_grouped} урокам (например: 6502, CHIP-8, PPU, тайминг)..."
+stats = [
+  { value = "{modules}", label = "Модулей" },
+  { value = "{articles}", label = "Уроков" },
+  { value = "100%", label = "Offline &amp; file:///" },
+]
+catalog_title_html = "Модули курса"
+catalog_sub_html = "Одна линейная последовательность: весь материал обязателен"
+footer_html = [
+  "Учебник по эмуляции • Эмуляторы процессоров, компьютеров и игровых консолей на Go",
+  "Полностью автономная сборка. Никаких трекеров, рекламы и внешних серверов.",
+]
+
+[audit]
+path_max = 180
+
+# Строки интерфейса движка (engine/strings/ru.toml): в учебнике — модули М0–М18 и уроки
+[strings.sidebar]
+filter_label = "Фильтр по урокам"
+filter_placeholder = "Фильтр по урокам..."
+filter_aria = "Фильтр по урокам"
+articles_count = "Уроков:"
+
+[strings.article]
+module_tag = "М{n}"
+prev = "← Предыдущий урок"
+next = "Следующий урок →"
+
+[strings.callouts]
+tip = "Совет"
+info = "Под капотом"
+warning = "Подводные камни"
+
+[strings.index]
+search_label = "Поиск по урокам"
+search_aria = "Поиск по урокам"
+card_articles = "{n} уроков"
+card_sections = "📁 {n} подразделов"
+card_start = "Начать модуль →"
