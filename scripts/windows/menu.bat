@@ -17,6 +17,7 @@ echo   10. runtime-projection - Что браузер нарисовал на к
 echo   11. tests - Тесты ядра (тесты демо-книги здесь пропускаются)
 echo   12. engine-sync - Обновить engine/ из репозитория движка (ENGINE_DIR, по умолчанию ../html-textbook-engine); делает коммит
 echo   13. open-site - Открыть dist/index.html в браузере
+echo   14. commons-fetch - Изображение с Wikimedia Commons в media/ урока и credits.toml (нужен Pillow)
 set "c="
 set /p "c=Номер (Enter - выход): "
 if "%c%"=="" exit /b 0
@@ -33,6 +34,7 @@ if "%c%"=="10" call "%~dp0runtime-projection.bat" & goto done
 if "%c%"=="11" call "%~dp0tests.bat" & goto done
 if "%c%"=="12" call "%~dp0engine-sync.bat" & goto done
 if "%c%"=="13" call "%~dp0open-site.bat" & goto done
+if "%c%"=="14" call "%~dp0commons-fetch.bat" & goto done
 echo Нет пункта %c%
 :done
 echo.

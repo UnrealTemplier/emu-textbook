@@ -130,9 +130,10 @@ emu-textbook/
 ├── engine/          копия ядра html-textbook-engine (не редактируется, обновляется engine.sync)
 ├── book.toml        настройки книги для движка
 ├── book/            слой книги: hooks.py (gofmt -e в аудите), assets/ (логотип, favicon)
-├── scripts/         сборка и проверка: REBUILD_ALL, linux/*.sh, windows/*.bat
+├── scripts/         сборка и проверка: REBUILD_ALL, linux/*.sh, windows/*.bat; commons_fetch.py — изображения с Commons
 ├── .github/         CI: сборка → аудит → GitHub Pages
 ├── requirements.txt markdown>=3.10,<3.11
+├── requirements-dev.txt  Pillow — только для инструмента автора commons_fetch.py
 └── dist/            локальная сборка сайта (в Git не хранится)
 ```
 
@@ -142,7 +143,7 @@ emu-textbook/
 
 ## Сайт учебника
 
-Уроки пишутся в Markdown в `sources/`, сайт собирает движок [html-textbook-engine](https://github.com/UnrealTemplier/html-textbook-engine) — тот же, что у [go-textbook](https://github.com/UnrealTemplier/go-textbook-ru) и go-workout. Готовый сайт статический: открывается по `file://`, с флешки или со статического хостинга, без сети и CDN. В нём темы оформления, подсветка кода, диаграммы Mermaid, формулы KaTeX, выноски, оглавление страницы, поиск и навигация по модулям.
+Уроки пишутся в Markdown в `sources/`, сайт собирает движок [html-textbook-engine](https://github.com/UnrealTemplier/html-textbook-engine) — тот же, что у [go-textbook](https://github.com/UnrealTemplier/go-textbook-ru) и go-workout. Готовый сайт статический: открывается по `file://`, с флешки или со статического хостинга, без сети и CDN. В нём темы оформления, подсветка кода, изображения с подписями и увеличением по клику, диаграммы Mermaid, формулы KaTeX, выноски, оглавление страницы, поиск и навигация по модулям.
 
 Нужны Python ≥ 3.11, Go (для проверки `gofmt -e` блоков кода в аудите) и, по желанию, Firefox (рантайм-проверка формул и диаграмм).
 
@@ -153,6 +154,8 @@ python3 -m engine.audit --strict            # ссылки, якоря, имен
 ```
 
 Откройте `dist/index.html` в браузере. Всё сразу — зависимости, тесты ядра, чистая пересборка и строгий аудит — `scripts/REBUILD_ALL.sh` (Linux) или `scripts/REBUILD_ALL.bat` (Windows); отдельные команды — [`scripts/README.md`](scripts/README.md).
+
+Изображения уроков лежат в `media/` рядом с уроком, атрибуция — в `media/credits.toml`; движок копирует их в сайт и проверяет лицензии и объём. Скачать файл с Wikimedia Commons, уменьшить и записать атрибуцию — `scripts/commons_fetch.py` (нужен `pip install -r requirements-dev.txt`, подробности — [`scripts/README.md`](scripts/README.md)).
 
 На каждый push в `main` GitHub Actions собирает сайт, проверяет его аудитом и публикует на GitHub Pages только при успехе (`.github/workflows/pages.yml`). Как прогрессия раскладывается по файлам в `sources/`, правила разметки уроков и обновление движка — [AGENTS.md](AGENTS.md), раздел 8.
 

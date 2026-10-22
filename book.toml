@@ -81,6 +81,7 @@ path_max = 180
 
 # Изображения уроков (ядро 1.18.0, README движка, «Изображения»): файлы — в media/ рядом с уроком,
 # атрибуция — media/credits.toml. Ссылки на картинки в интернете запрещены (Offline Guard).
+# Скачивание с Wikimedia Commons, уменьшение и WebP — scripts/commons_fetch.py (инструмент автора).
 [media]
 enabled = true
 dir_name = "media"

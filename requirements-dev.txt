@@ -1,0 +1,3 @@
+# Инструменты автора, не зависимости сборки (сборке хватает requirements.txt).
+# scripts/commons_fetch.py: уменьшение изображений и перевод в WebP/PNG.
+Pillow>=10.0

@@ -18,6 +18,7 @@ while true; do
   echo "  11. tests — Тесты ядра (тесты демо-книги здесь пропускаются)"
   echo "  12. engine-sync — Обновить engine/ из репозитория движка (ENGINE_DIR, по умолчанию ../html-textbook-engine); делает коммит"
   echo "  13. open-site — Открыть dist/index.html в браузере"
+  echo "  14. commons-fetch — Изображение с Wikimedia Commons в media/ урока и credits.toml (нужен Pillow)"
   printf "Номер (Enter — выход): "
   read -r c || exit 0
   [ -z "$c" ] && exit 0
@@ -35,6 +36,7 @@ while true; do
     11) sh ./tests.sh ;;
     12) sh ./engine-sync.sh ;;
     13) sh ./open-site.sh ;;
+    14) sh ./commons-fetch.sh ;;
     *) echo "Нет пункта $c" ;;
   esac
   printf "\nГотово (код %s). Enter — назад в меню... " "$?"

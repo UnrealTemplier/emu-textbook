@@ -37,5 +37,26 @@ Python: в Linux — `python3` (или `python`), в Windows — `py -3` (или
 | `tests` | Тесты ядра (тесты демо-книги здесь пропускаются) |
 | `engine-sync` | Обновить engine/ из репозитория движка (ENGINE_DIR, по умолчанию ../html-textbook-engine); делает коммит |
 | `open-site` | Открыть dist/index.html в браузере |
+| `commons-fetch` | Изображение с Wikimedia Commons в `media/` урока и запись в `credits.toml` (аргументы или по запросу; нужен Pillow) |
 
 `ENGINE_DIR` — путь к репозиторию движка для `engine-sync` (по умолчанию соседний каталог `../html-textbook-engine`). Общая часть — `linux/_lib.sh` / `windows/_lib.bat`; `REBUILD_ALL` — самостоятельный файл, без неё.
+
+## Изображения с Wikimedia Commons — `commons_fetch.py`
+
+Инструмент автора, не часть сборки: сеть и Pillow нужны только ему (`pip install -r requirements-dev.txt`), сайт собирается без них. Обёртки — `linux/commons-fetch.sh` и `windows/commons-fetch.bat`; без аргументов они спрашивают файл, урок, имя и подпись.
+
+```bash
+python3 scripts/commons_fetch.py File:Eniac.jpg "sources/<путь урока>/01. Урок.md" --name eniac --caption "ENIAC, 1946"
+python3 scripts/commons_fetch.py https://commons.wikimedia.org/wiki/File:MOS_6502AD_4585_top.jpg "sources/<каталог урока>" --name mos6502 --dry-run
+```
+
+Что делает:
+
+1. Принимает `File:Имя.jpg`, `Имя.jpg`, URL страницы файла на Commons или в Википедии (`…#/media/File:…`) и ссылку `upload.wikimedia.org`.
+2. Через API Commons (`action=query&prop=imageinfo&iiprop=url|extmetadata`) берёт автора (`Artist`, при неизвестном — `Credit`), лицензию, ссылку на лицензию, страницу файла и описание.
+3. Проверяет лицензию по `[media] allowed_licenses` из `book.toml`. Лицензия не из списка — отказ; если у файла несколько лицензий, подходящая указывается через `--license`.
+4. Скачивает оригинал (TIFF, PDF и очень большие файлы — миниатюру Commons), уменьшает до `--max-side` (1600 px) по длинной стороне и сохраняет: фото — WebP (качество `--quality` 80, при превышении `max_file_kb` — ниже, до 50), схему с палитрой до 256 цветов — PNG без потерь, SVG — как есть. Exif-поворот применяется, метаданные снимка не переносятся. `--format webp|png|keep` задаёт формат явно, `keep` — без обработки (так сохраняется анимированный GIF).
+5. Кладёт файл в `media/` урока (цель — `.md` урока, его каталог или сама папка `media/`) и дописывает `media/credits.toml`: `caption`, `alt`, `author`, `license`, `license_url`, `source`, `modified` (что изменено — обязательно для CC BY и CC BY-SA), `invert_dark` (`--invert-dark` — для чёрно-белых схем). В комментарии записи — имя файла на Commons, его лицензия там и, если нет `--caption`, описание с Commons для подписи.
+6. Печатает размеры, объём и строку для урока: `![Подпись](media/eniac.webp)` или `![[eniac.webp]]`.
+
+Существующий файл или запись с тем же именем не перезаписываются без `--force`. Подпись пишется по-русски: описание с Commons обычно английское, оно попадает только в комментарий. Правила выбора изображений и лицензий — раздел «Иллюстрации» в `docs/03_Final/Final_Progression_v3_Claude/00_Общая_часть.md`.
