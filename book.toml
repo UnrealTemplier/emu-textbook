@@ -79,6 +79,27 @@ footer_html = [
 [audit]
 path_max = 180
 
+# Изображения уроков (ядро 1.18.0, README движка, «Изображения»): файлы — в media/ рядом с уроком,
+# атрибуция — media/credits.toml. Ссылки на картинки в интернете запрещены (Offline Guard).
+[media]
+enabled = true
+dir_name = "media"
+extensions = ["webp", "png", "jpg", "jpeg", "gif", "svg", "avif"]
+credits_file = "credits.toml"
+figures = true
+lightbox = true
+# Служебная страница со всеми изображениями; ссылка на неё — в подвале каждой страницы
+credits_page = "illustrations.html"
+require_alt = true
+require_credit = true
+# NC, ND, «без лицензии», фото производителей и сканы журналов запрещены: сайт публичный
+allowed_licenses = ["PD", "CC0", "CC BY", "CC BY-SA", "own"]
+# Фото — WebP до 1600 px по длинной стороне, ~100–150 КБ; схемы — SVG или PNG без потерь
+max_file_kb = 500
+max_dimension_px = 2000
+# GitHub Pages: сайт не больше 1 ГБ; 700 МБ медиа оставляют запас под HTML и ассеты
+budget_mb = 700
+
 # Строки интерфейса движка (engine/strings/ru.toml): в учебнике — модули М0–М18 и уроки
 [strings.sidebar]
 filter_label = "Фильтр по урокам"
