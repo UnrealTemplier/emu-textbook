@@ -93,8 +93,14 @@ lightbox = true
 credits_page = "illustrations.html"
 require_alt = true
 require_credit = true
-# NC, ND, «без лицензии», фото производителей и сканы журналов запрещены: сайт публичный
-allowed_licenses = ["PD", "CC0", "CC BY", "CC BY-SA", "own"]
+# NC, ND, «без лицензии», фото производителей и сканы журналов запрещены: сайт публичный.
+# Кроме CC — открытые лицензии с текстом, разрешающие изменение и коммерческое использование,
+# под короткими именами Commons: OGL 1–3 (Великобритания; «OGL v1.0» — так Commons пишет версию 1),
+# OGL-C (Канада), Licence Ouverte (Франция, Etalab), dl-de/by-2-0 и dl-de/zero-2-0 (Германия),
+# FAL (Free Art License, копилефт, как CC BY-SA). Неформальные шаблоны Commons
+# («Copyrighted free use», «Attribution») и только GFDL — нет.
+allowed_licenses = ["PD", "CC0", "CC BY", "CC BY-SA", "OGL", "OGL v1.0", "OGL-C", "Licence Ouverte",
+                    "dl-de/by-2-0", "dl-de/zero-2-0", "FAL", "own"]
 # Фото — WebP до 1600 px по длинной стороне, ~100–150 КБ; схемы — SVG или PNG без потерь
 max_file_kb = 500
 max_dimension_px = 2000

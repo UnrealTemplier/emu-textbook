@@ -210,7 +210,7 @@ sources/
   ["eniac.webp"]
   caption = "ENIAC: Глен Бек и Бетти Снайдер программируют машину"
   author = "U.S. Army Photo"
-  license = "PD"                 # PD, CC0, CC BY 4.0, CC BY-SA 3.0, own
+  license = "PD"                 # PD, CC0, CC BY 4.0, CC BY-SA 3.0, OGL 3, own
   license_url = ""               # ссылка на текст лицензии, если есть
   source = "https://commons.wikimedia.org/wiki/File:…"
   modified = "уменьшено до 1600 px, WebP (качество 80)"
@@ -218,7 +218,7 @@ sources/
   ```
 
   Для чужого изображения нужны `author`, `license`, `source`; для собственного — `license = "own"`. Неизвестный ключ — ошибка сборки.
-- **Ограничения аудита:** лицензия из `allowed_licenses` (PD, CC0, CC BY, CC BY-SA, own); файл до 500 КБ и сторона до 2000 px (предупреждение, в `--strict` — ошибка); неиспользуемый файл — предупреждение; общий объём медиа — не больше 700 МБ (ошибка). Фото — WebP до 1600 px по длинной стороне (100–150 КБ), схемы — SVG или PNG без потерь.
+- **Ограничения аудита:** лицензия из `allowed_licenses` (PD, CC0, CC BY, CC BY-SA, открытые государственные лицензии OGL, OGL-C, Licence Ouverte, dl-de, а также FAL и own); файл до 500 КБ и сторона до 2000 px (предупреждение, в `--strict` — ошибка); неиспользуемый файл — предупреждение; общий объём медиа — не больше 700 МБ (ошибка). Фото — WebP до 1600 px по длинной стороне (100–150 КБ), схемы — SVG или PNG без потерь.
 - **С Commons** изображение скачивается инструментом автора: `python3 scripts/commons_fetch.py File:Имя.jpg "<урок>.md" --name имя --caption "Подпись"` (нужен `pip install -r requirements-dev.txt`). Он проверяет лицензию по `book.toml`, уменьшает, переводит в WebP или PNG и дописывает `credits.toml`. Подпись задаётся по-русски: описание с Commons попадает только в комментарий записи. Подробнее — `scripts/README.md`.
 
 ### Сборка и проверка

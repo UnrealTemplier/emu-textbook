@@ -16,7 +16,8 @@ scripts/commons_fetch.py — изображение с Wikimedia Commons в medi
     python3 scripts/commons_fetch.py https://commons.wikimedia.org/wiki/File:MOS_6502AD_4585_top.jpg \\
         "sources/…/media" --name mos6502 --dry-run
 
-Лицензия проверяется по [media] allowed_licenses из book.toml (PD, CC0, CC BY, CC BY-SA, own).
+Лицензия проверяется по [media] allowed_licenses из book.toml (PD, CC0, CC BY, CC BY-SA, OGL, OGL-C,
+Licence Ouverte, dl-de, FAL, own).
 Подробности — раздел «Иллюстрации» в docs/03_Final/Final_Progression_v3_Claude/00_Общая_часть.md.
 """
 
